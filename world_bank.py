@@ -1,3 +1,10 @@
+#!/usr/bin/env python
+
+__author__ = 'Fred Flores'
+__version__ = '0.0.1'
+__date__ = '2020-04-17'
+__email__ = 'fredflorescfa@gmail.com'
+
 import pandas as pd
 
 
