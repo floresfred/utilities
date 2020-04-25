@@ -8,7 +8,7 @@ __email__ = 'fredflorescfa@gmail.com'
 import re
 import numpy as np
 import pandas as pd
-from decimal import Decimal
+np.seterr(divide='ignore', invalid='ignore')
 
 
 def significand(x):
