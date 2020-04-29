@@ -16,7 +16,7 @@ def split_number(x):
     if x < 0:
         sign = '-'
     else:
-        sign = '+'
+        sign = ''
 
     x = x * 1.0  # convert to float
     x = np.abs(x)
@@ -77,8 +77,12 @@ def binary_to_decimal(binary_str, places=20):
     else:
         sign = ''
 
-    integer_part = binary_str.split('.')[0]
-    fractional_part = binary_str.split('.')[1]
+    if '.' in binary_str:
+        integer_part = binary_str.split('.')[0]
+        fractional_part = binary_str.split('.')[1]
+    else:
+        integer_part = binary_str
+        fractional_part = ''
 
     # Convert binary integer to decimal integer
     reversed_int_part = integer_part[::-1]
@@ -109,8 +113,5 @@ def binary_to_decimal(binary_str, places=20):
         return multiplier * (int_sum + frac_sum)
 
 
-
-
-        
 
 

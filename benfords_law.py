@@ -7,6 +7,7 @@ __email__ = 'fredflorescfa@gmail.com'
 
 import re
 import numpy as np
+import math
 import pandas as pd
 np.seterr(divide='ignore', invalid='ignore')
 
@@ -70,6 +71,19 @@ def digit_frequency(x, max_positions=10):
     frequency = np.divide(counts, counts.sum(axis=1).reshape(-1, 1))
 
     return frequency
+
+
+def expected_frequency(d, b):
+    """The expected frequency of an integer appear in the first p positions of a number d.
+        position is defined by the length of integer d.
+          e.g., d = 4 has length 1 and position is the first position.
+                d = 427 has length 3 and position is the first 3 positions."""
+
+    assert isinstance(d, int), 'The digit value entered is an invalid integer.'
+    assert d > 0, 'The digit must be greater than zero.'
+    assert isinstance(b, int), 'The base value entered is an invalid integer.'
+
+    return math.log((1 + (1/d)), b)
 
 
 
