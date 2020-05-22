@@ -43,7 +43,7 @@ def cap(s):
 
 
 def get_data():
-    csv_loc = r'C:\Users\fredf\OneDrive\investment_research\screener_results.xls'
+    csv_loc = r'C:\Users\fredf\OneDrive\data\fidelity\screener_results.xls'
 
     df = pd.read_excel(csv_loc, nrows=504)
 
