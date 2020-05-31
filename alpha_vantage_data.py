@@ -20,10 +20,15 @@ ts = TimeSeries(key, output_format='pandas')
 ti = TechIndicators(key)
 
 
-def daily_price_volume(ticker_list):
+def price_volume(ticker_list, frequency='daily'):
     """Retrieve daily prices, 5 tickers at a time with a minute lag from Alpha Vantage."""
 
-    tick_grp = list(set(util.grouped(ticker_list, 5)))
+    # This needs to be fixed. The grouped method is dropping companies that don't make a complete 5 member group
+    # and not making a group at all for lists < 5.
+    if len(ticker_list) > 5:
+        tick_grp = list(set(util.grouped(ticker_list, 5)))
+    else:
+        tick_grp = list(set(ticker_list))
 
     df = pd.DataFrame()
     counter = 1
@@ -36,7 +41,11 @@ def daily_price_volume(ticker_list):
         for t in tckr:
 
             try:  # Get daily prices and volumes
-                company, meta = ts.get_daily(symbol=t)
+                get = {'daily': ts.get_daily(symbol=t),
+                       'monthly': ts.get_monthly(symbol=t)}
+                company, meta = get[frequency]
+
+                # company, meta = ts.get_daily(symbol=t)
                 company['ticker'] = t
                 company['run_date'] = pd.to_datetime(dt.now(), unit='ns')
 
