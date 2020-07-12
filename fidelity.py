@@ -23,6 +23,7 @@ numeric_data = ['Security-Price', 'P-E-Price-TTM-Earnings-', 'S-P-500-R-', 'P-E-
                 'Total-Return-1-Yr-Annualized-', 'EBITD-Margin-TTM-', '-Revenue-to-RD-Last-FY-',
                 'SG-A-Expense-Net-Sales', 'Total-Debt-Equity-TTM-', 'Operating-Margin-TTM-']
 
+
 # Extrapolate capitalization in numeric form
 def cap(s):
 
