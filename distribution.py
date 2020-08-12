@@ -22,9 +22,9 @@ def set_distribution(name='norm', loc=0, scale=1, shape=1):
                     'expon': (expon(loc=loc, scale=scale),
                               r'Exponential Distribution',
                               r'$p(x)=\exp(-x)}$' + r'loc = {:.2f}, scale = {:.2f}'.format(loc, scale)),
-                    'powerlaw': (powerlaw(a=shape),
+                    'powerlaw': (powerlaw(a=shape+1),
                                  r'Power Law Distribution',
-                                 r'$p(x,\alpha)=\alpha x^{\alpha-1}$' + r', $\alpha = {:.2f}$'.format(shape)),
+                                 r'$p(x,\alpha)=\alpha x^{\alpha-1}$' + r', $\alpha-1 = {:.2f}$'.format(shape)),
                     'lognorm': (lognorm(s=shape),
                                 r'Lognormal Distribution',
                                 r'$p(x,s)=\frac{1}{sx\sqrt{2\pi}} exp(-\frac{\log^2(x)}{2s^2})$' +
@@ -32,29 +32,76 @@ def set_distribution(name='norm', loc=0, scale=1, shape=1):
     return distribution[name]
 
 
-def plot_distribution(name='norm', sample_size=10000, loc=0, scale=1, color='royalblue', shape=1, figsize=(12, 4)):
+def plot_distribution(name='norm', sample_size=10000, loc=0, scale=1, bins=None, color='royalblue',
+                      shape=1, figsize=(12, 4), log_scale=True):
     """ Plot theoretical distribution and a random sample from the same distribution. """
     dist = set_distribution(name=name, loc=loc, scale=scale, shape=shape)
+    y = dist[0].rvs(size=sample_size)
 
-    x = np.linspace(dist[0].ppf(0.0001), dist[0].ppf(0.9999), sample_size)
+    x = np.linspace(dist[0].ppf(0), dist[0].ppf(1), 100)
 
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=figsize)
     plt.suptitle(dist[1] + ', ' + dist[2], y=1.03, fontsize=12)
 
-    ax1.hist(dist[0].rvs(size=sample_size), density=True, histtype='stepfilled',
-             bins=100, alpha=.5, label='Random Sample (N = {:0d})'.format(sample_size), color=color)
-    ax1.plot(x, dist[0].pdf(x), 'k-', lw=2, label='Theoretical Distribution')
-    ax1.set_title('Probability Density')
+    ax1.hist(y, density=True, bins=bins, alpha=.5,
+             label='Random Sample (N = {:0d})'.format(sample_size), color=color)
+    ax1.plot(x, dist[0].pdf(x), 'k-', lw=2, label='Theoretical Distribution')  # histtype='stepfilled',
+    ax1.set_title('PDF')
+
     ax1.set_ylabel(r'$p(x)$')
     ax1.set_xlabel(r'$x$')
     ax1.legend(loc='best', frameon=False)
 
-    ax2.hist(dist[0].rvs(size=sample_size), density=True, histtype='stepfilled', cumulative=True,
-             bins=100, alpha=.5, label='Random Sample (N = {:0d})'.format(sample_size), color=color)
+    ax2.hist(y, density=True, cumulative=True, alpha=.5,
+             label='Random Sample (N = {:0d})'.format(sample_size), color=color)
     ax2.plot(x, dist[0].cdf(x), 'k-', lw=2, label='Theoretical Distribution')
-    ax2.set_title('Cumulative Density')
-    ax2.set_ylabel(r'$\Phi(x)$')
-    ax2.set_xlabel(r'$x$')
+    ax2.set_title('CDF')
+
+    if log_scale:
+        ax1.set_xscale('log')
+        ax1.set_yscale('log')
+        ax2.set_xscale('log')
+        ax2.set_yscale('log')
+        ax1.set_ylabel(r'$log(p(x))$')
+        ax1.set_xlabel(r'$log(x)$')
+        ax2.set_ylabel(r'$log(\Phi(x))$')
+        ax2.set_xlabel(r'$log(x)$')
+    else:
+        ax1.set_ylabel(r'$p(x)$')
+        ax1.set_xlabel(r'$x$')
+        ax2.set_ylabel(r'$\Phi(x)$')
+        ax2.set_xlabel(r'$x$')
+
+    plt.show()
+
+
+def plot_empirical_distribution(y, title='title', bins=None, color='royalblue', figsize=(12, 4), log_scale=True):
+
+    """ Plot empirical distribution and a random sample from the same distribution. """
+
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=figsize)
+    plt.suptitle(title, y=1.03, fontsize=12)
+
+    ax1.hist(y, density=True, bins=bins, alpha=.5, color=color)
+    ax1.set_title('PDF')
+
+    ax2.hist(y, density=True, cumulative=True, alpha=.5, color=color)
+    ax2.set_title('CDF')
+
+    if log_scale:
+        ax1.set_xscale('log')
+        ax1.set_yscale('log')
+        ax2.set_xscale('log')
+        ax2.set_yscale('log')
+        ax1.set_ylabel(r'$log[p(x)]$')
+        ax1.set_xlabel(r'$log(x)$')
+        ax2.set_ylabel(r'$log[\Phi(x)]$')
+        ax2.set_xlabel(r'$log(x)$')
+    else:
+        ax1.set_ylabel(r'$p(x)$')
+        ax1.set_xlabel(r'$x$')
+        ax2.set_ylabel(r'$\Phi(x)$')
+        ax2.set_xlabel(r'$x$')
 
     plt.show()
 

@@ -30,4 +30,18 @@ def grouped(iterable, n):
     return zip(*[iter(iterable)]*n)
 
 
+def edges_to_midpoints(x):
+    """ Given a numpy array, sort values and then compute midpoints."""
+    x = sorted(x)
+    mid = []
+    range = []
+    for i in np.arange(0, len(x)-1):
+        mid.append((x[i]+x[i+1])/2)
+        range.append(x[i+1] - x[i])
+
+    return np.array(mid), np.array(range)
+
+
+
+
 
